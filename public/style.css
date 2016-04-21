@@ -6,7 +6,7 @@ body {
     text-align: center;
 }
 
-li {
+.active {
     color: white;
 }
 
@@ -33,4 +33,10 @@ li {
 .searchimg {
     border-radius: 50%;
     
+}
+
+#mainSearch{
+    
+    width: 70%;
+    margin: 150px auto auto auto;
 }
