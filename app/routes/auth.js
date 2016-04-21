@@ -2,7 +2,7 @@ var User = require("../models/user");
 module.exports = function(router, passport) {
 
     router.get("/", function(req, res) {
-        res.send("../public/index.html");
+        res.render("index.ejs");
     });
 
     router.get('/facebook', passport.authenticate('facebook', {
@@ -14,7 +14,8 @@ module.exports = function(router, passport) {
         }),
         function(req, res) {
             // Successful authentication, redirect home.
-            res.redirect('/');
+            res.redirect(req.session.returnTo || '/');
+            req.session.returnTo=null;
         });
 
     router.get("/logout", function(req, res) {

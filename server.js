@@ -62,11 +62,12 @@ app.get("/checkin/:id", function(req,res){
     if (req.user){
       User.update({facebookId: req.user.facebookId}, {$push: {checkIns: {$each: [req.params.id]}}}, {upsert:true}, function(err){
         if(err) throw err;
-        res.redirect("");
+        res.redirect(req.header('Referer') || '/');
         });
         
      }
      else{
+         req.session.returnTo =req.header('Referer') || '/';; 
          res.render("login.ejs");
      }
     
@@ -74,13 +75,14 @@ app.get("/checkin/:id", function(req,res){
 
 app.get("/checkout/:id", function (req,res){
        if (req.user){
-      User.update({facebookId: req.user.facebookId}, {pull: {checkIns: {$each: [req.params.id]}}}, {upsert:true}, function(err){
-        if(err) throw err;
-        res.redirect("");
+        User.update( {facebookId: req.user.facebookId}, { $pullAll: {checkIns: [req.params.id] } }, function (err){ 
+            if(err) throw err;
+            res.redirect(req.header('Referer') || '/');
         });
         
      }
      else{
+         req.session.returnTo =req.header('Referer') || '/';; 
          res.render("login.ejs");
      }
     
