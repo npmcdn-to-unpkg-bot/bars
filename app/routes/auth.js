@@ -1,10 +1,6 @@
 var User = require("../models/user");
 module.exports = function(router, passport) {
 
-    router.get("/", function(req, res) {
-        res.render("index.ejs");
-    });
-
     router.get('/facebook', passport.authenticate('facebook', {
         scope: []
     }));
@@ -22,4 +18,10 @@ module.exports = function(router, passport) {
         req.logout();
         res.redirect("/");
     })
+    
+    
+    router.get("/*", function(req, res) {
+        res.render("index.ejs");
+    });
+
 }
