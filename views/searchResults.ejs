@@ -5,6 +5,8 @@
     <% } else {%>
     <title>Search Results</title>
     <% } %>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type = "text/css" href="/style.css"/>
 </head>
 <body>
    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
@@ -15,10 +17,7 @@
     
 	<%if (user){ %>
     <li><a href="/auth/logout">Logout</a></li>
-    <% } else {%>
-	<li><a href="/auth/facebook">Login</a></li>
-	<% }%>
-	
+    <% } %>
 	</ul>	
 		<div class="col-sm-6 col-md-6 pull-right">
 		<form class="navbar-form" role="search" action="/search">
@@ -46,13 +45,20 @@
                 <% } else { %>
                     <a class="btn btn-primary" href="/checkin/<%=businesses[i].id%>">Check in</a>
                 <% } %>
-                
+
+                <% if (checkInCount[(businesses[i].id)]) {%>
+                <% if (checkInCount[(businesses[i].id)]>1) {%>
+                <h6><%=checkInCount[(businesses[i].id)]%> people going</h6>
+                <% } else { %>
+                <h6><%=checkInCount[(businesses[i].id)]%> person going</h6>
+                <% } %>
+                <% } %>
+
             	</span>
         <% } %>
     </div>
     </div>
-     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <link rel="stylesheet" type = "text/css" href="/style.css"/>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="https://npmcdn.com/masonry-layout@4.0.0/dist/masonry.pkgd.min.js"></script>
     <script src="https://npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.js"></script>

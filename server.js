@@ -5,6 +5,7 @@ var express = require("express"),
     mongoose = require("mongoose"),
     MongoStore = require("connect-mongo")(session),
     User = require("./app/models/user.js"),
+    Bar = require("./app/models/bar.js"),
     port = process.env.PORT,
     yelpAuth = require("./config/yelpAuth.js"),
     passport = require("passport"),
@@ -46,11 +47,22 @@ app.get("/search", function (req,res){
         location: req.query.location
     })
     .then(function(data) {
-        if (req.user)
+        
+        var ids = [],
+        checkInCount = {};
+        for (var i in data.businesses){
+            ids.push(data.businesses[i].id)
+        }
+         Bar.find({ id: { $in: ids}}).then(function (bars) {
+             for (var b in bars)
+                 checkInCount[bars[b].id]= bars[b].checkIns;
+            data.checkInCount = checkInCount;
+            if (req.user)
             data.user = req.user;
-        else
+            else
             data.user= false;
-        res.render("searchResults.ejs",data);
+            res.render("searchResults.ejs",data);
+        })
     })
     .catch(function(err) {
         console.log(err);
@@ -62,12 +74,27 @@ app.get("/checkin/:id", function(req,res){
     if (req.user){
       User.update({facebookId: req.user.facebookId}, {$push: {checkIns: {$each: [req.params.id]}}}, {upsert:true}, function(err){
         if(err) throw err;
-        res.redirect(req.header('Referer') || '/');
-        });
-        
+        Bar.count({id: req.params.id}).then(function(c){
+            if (c>0){
+            Bar.update({id: req.params.id}, {$inc:{checkIns: 1}}, function (err){
+                if (err) throw err;
+                res.redirect(req.header('Referer') || '/');
+            })  
+        }
+        else{
+            var newBar = new Bar();
+            newBar.id = req.params.id;
+            newBar.checkIns = 1;
+            newBar.save().then(function(){
+               res.redirect(req.header('Referer') || '/'); 
+            })
+        }
+        })        
+    });
      }
      else{
-         req.session.returnTo =req.header('Referer') || '/';; 
+
+         req.session.returnTo =req.header('Referer') || '/'; 
          res.render("login.ejs");
      }
     
@@ -77,12 +104,15 @@ app.get("/checkout/:id", function (req,res){
        if (req.user){
         User.update( {facebookId: req.user.facebookId}, { $pullAll: {checkIns: [req.params.id] } }, function (err){ 
             if(err) throw err;
-            res.redirect(req.header('Referer') || '/');
+            Bar.update({id: req.params.id}, {$inc :{checkIns: -1}}, function (err){
+          if (err) throw err;
+          res.redirect(req.header('Referer') || '/');
+        })
         });
         
      }
      else{
-         req.session.returnTo =req.header('Referer') || '/';; 
+         req.session.returnTo =req.header('Referer') || '/';
          res.render("login.ejs");
      }
     
