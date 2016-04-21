@@ -1,3 +1,4 @@
+config/yelpAuth.js
 node_modules/
 data/
-config/yelpapi.js
+config/auth.js

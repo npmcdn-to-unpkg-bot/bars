@@ -1,0 +1,27 @@
+{
+  "name": "neeilbars",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neeilan/bars.git"
+  },
+  "author": "neeilan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neeilan/bars/issues"
+  },
+  "homepage": "https://github.com/neeilan/bars#readme",
+  "dependencies": {
+    "crypto": "0.0.3",
+    "oauth-1.0a": "^1.0.1",
+    "request": "^2.72.0",
+    "shortid": "^2.2.6",
+    "yelp": "^1.0.1"
+  }
+}
