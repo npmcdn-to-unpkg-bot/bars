@@ -47,7 +47,6 @@ app.get("/search", function (req,res){
         location: req.query.location
     })
     .then(function(data) {
-        
         var ids = [],
         checkInCount = {};
         for (var i in data.businesses){
@@ -66,9 +65,9 @@ app.get("/search", function (req,res){
     })
     .catch(function(err) {
         console.log(err);
+        res.send(JSON.parse(err.data).error.text+"<br><a href='/'>Go Home</a>");
     });
 })
-
 
 app.get("/checkin/:id", function(req,res){
     if (req.user){
@@ -93,11 +92,9 @@ app.get("/checkin/:id", function(req,res){
     });
      }
      else{
-
          req.session.returnTo =req.header('Referer') || '/'; 
          res.render("login.ejs");
      }
-    
 })
 
 app.get("/checkout/:id", function (req,res){
@@ -109,7 +106,6 @@ app.get("/checkout/:id", function (req,res){
           res.redirect(req.header('Referer') || '/');
         })
         });
-        
      }
      else{
          req.session.returnTo =req.header('Referer') || '/';
