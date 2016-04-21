@@ -21,19 +21,27 @@ var yelp = new Yelp({
     token_secret: yelpAuth.token_secret,
 });
 
-app.get("/search/:location", function (req,res){
+app.get("/search", function (req,res){
     yelp.search({
         term: 'bars',
-        location: req.params.location
+        location: req.query.location
     })
     .then(function(data) {
-        res.render("search.ejs",data);
+        res.render("searchResults.ejs",data);
     })
     .catch(function(err) {
-        console.error(err);
+        console.log(err);
     });
 })
 
+
+app.get("/checkin", function(req,res){
+    
+})
+
+app.get("/checkout", function (req,res){
+    
+})
 
 
 
