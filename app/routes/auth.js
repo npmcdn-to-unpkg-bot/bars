@@ -10,8 +10,10 @@ module.exports = function(router, passport) {
         }),
         function(req, res) {
             // Successful authentication, redirect home.
-            res.redirect(req.session.returnTo || '/');
-            req.session.returnTo=null;
+            var lastSearch = req.cookies.lastSearch;
+            res.clearCookie('lastSearch');
+            res.redirect("/search?location="+lastSearch || '/');
+            
         });
 
     router.get("/logout", function(req, res) {
